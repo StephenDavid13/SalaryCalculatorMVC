@@ -1,0 +1,83 @@
+@model SalaryCalculatorMVC.Models.EmployeeModel
+
+@{
+    ViewData["Title"] = "Salary Packaging Calculator";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="text-center mb-0">Salary Packaging Calculator</h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Calculate" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="CompanyType" class="form-label"></label>
+                            <select asp-for="CompanyType" class="form-select" asp-items="Html.GetEnumSelectList<SalaryCalculatorMVC.Models.CompanyType>()">
+                                <option value="">-- Select Company Type --</option>
+                            </select>
+                            <span asp-validation-for="CompanyType" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="EmploymentType" class="form-label"></label>
+                            <select asp-for="EmploymentType" class="form-select" asp-items="Html.GetEnumSelectList<SalaryCalculatorMVC.Models.EmploymentType>()">
+                                <option value="">-- Select Employment Type --</option>
+                            </select>
+                            <span asp-validation-for="EmploymentType" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Salary" class="form-label"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input asp-for="Salary" class="form-control" />
+                            </div>
+                            <span asp-validation-for="Salary" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            <input asp-for="IsEducated" class="form-check-input" />
+                            <label asp-for="IsEducated" class="form-check-label"></label>
+                        </div>
+                        
+                        <div class="mb-3" id="hoursPerWeekDiv" style="display: none;">
+                            <label asp-for="HoursPerWeek" class="form-label"></label>
+                            <input asp-for="HoursPerWeek" class="form-control" />
+                            <span asp-validation-for="HoursPerWeek" class="text-danger"></span>
+                            <small class="form-text text-muted">Required for part-time employees (0-38 hours)</small>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Calculate</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function() {
+            // Show/hide hours per week field based on employment type
+            $('#EmploymentType').change(function() {
+                if ($(this).val() == '@((int)SalaryCalculatorMVC.Models.EmploymentType.PartTime)') {
+                    $('#hoursPerWeekDiv').show();
+                } else {
+                    $('#hoursPerWeekDiv').hide();
+                }
+            });
+            
+            // Trigger change event on page load to handle initial state
+            $('#EmploymentType').trigger('change');
+        });
+    </script>
+} 

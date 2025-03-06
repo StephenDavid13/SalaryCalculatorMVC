@@ -1,0 +1,69 @@
+@model SalaryCalculatorMVC.Models.CalculationResultModel
+
+@{
+    ViewData["Title"] = "Calculation Result";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h2 class="text-center mb-0">Calculation Result</h2>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.Message) && Model.Message != "Calculation successful")
+                    {
+                        <div class="alert alert-warning">
+                            <strong>Note:</strong> @Model.Message
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-success">
+                            <strong>Success!</strong> Your salary package limit has been calculated.
+                        </div>
+                    }
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-12 text-center">
+                            <h3 class="display-4 text-primary">@Html.DisplayFor(model => model.PackageLimit)</h3>
+                            <p class="lead">Maximum Package Limit</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Your Details</h4>
+                        </div>
+                        <div class="card-body">
+                            <dl class="row">
+                                <dt class="col-sm-4">Company Type:</dt>
+                                <dd class="col-sm-8">@Model.Employee.CompanyType</dd>
+                                
+                                <dt class="col-sm-4">Employment Type:</dt>
+                                <dd class="col-sm-8">@Model.Employee.EmploymentType</dd>
+                                
+                                <dt class="col-sm-4">Annual Salary:</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.Employee.Salary)</dd>
+                                
+                                <dt class="col-sm-4">Education Status:</dt>
+                                <dd class="col-sm-8">@(Model.Employee.IsEducated ? "Bachelor's degree or higher" : "No bachelor's degree")</dd>
+                                
+                                @if (Model.Employee.EmploymentType == SalaryCalculatorMVC.Models.EmploymentType.PartTime && Model.Employee.HoursPerWeek.HasValue)
+                                {
+                                    <dt class="col-sm-4">Hours Per Week:</dt>
+                                    <dd class="col-sm-8">@Model.Employee.HoursPerWeek</dd>
+                                }
+                            </dl>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <a asp-action="Index" class="btn btn-primary">Calculate Another</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
